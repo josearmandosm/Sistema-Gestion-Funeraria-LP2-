@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sistema Gestion Funeraria (LP2)", "Sistema Gestion Funeraria (LP2)\Sistema Gestion Funeraria (LP2).csproj", "{BE719B4F-26C6-4741-9273-B72D4107D335}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE719B4F-26C6-4741-9273-B72D4107D335}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE719B4F-26C6-4741-9273-B72D4107D335}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE719B4F-26C6-4741-9273-B72D4107D335}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE719B4F-26C6-4741-9273-B72D4107D335}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6AA3E9F5-E758-478B-A2E0-E9E00789DA17}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,6 @@
+@Sistema_Gestion_Funeraria__LP2__HostAddress = http://localhost:5193
+
+GET {{Sistema_Gestion_Funeraria__LP2__HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
