@@ -54,7 +54,21 @@ dotnet watch run
 ### BackEnd
 
 - [x] Análisis de requirimiento para la construcción de la Base de Datos.
+
 - [ ] Creación de los Controladores de los Modelos.
+
+### Encargados de los controladores (Nombre - Tabla)
+
+- [ ] Jeyson - Libro de firma.
+- [ ] Melany - Aributo Categoria.
+- [ ] Jose Armando - Categoria.
+- [ ] Angel - defunciones.
+- [ ] Juan - Factura_atributo.
+- [ ] Omar - Empleados.
+- [ ] Carlos - Sala.
+- [ ] Julian - Atributo.
+- [ ] Enmanuel - Cargo.
+
 - [ ] Implementación de los DTO de cada Modelo.
 
 ### FrontEnd
