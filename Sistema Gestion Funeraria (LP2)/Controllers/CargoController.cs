@@ -26,6 +26,17 @@ namespace Sistema_Gestion_Funeraria__LP2_.Controllers
             return cargo;
 
         }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Cargo>> GetCargo(int id)
+        {
+            if (context.Cargos == null)
+                return NotFound();
+            var cargo = await context.Cargos.FirstOrDefaultAsync(x=>x.IdCargo==id);
+            if (cargo==null)
+                return NotFound();
+            return cargo;
+
+        }
 
     }
 }
