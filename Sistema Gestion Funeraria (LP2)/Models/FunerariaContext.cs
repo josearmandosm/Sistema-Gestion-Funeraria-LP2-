@@ -150,8 +150,8 @@ public partial class FunerariaContext : DbContext
             entity.Property(e => e.Direccion).HasMaxLength(200);
             entity.Property(e => e.IdCargo).HasColumnName("ID_Cargo");
             entity.Property(e => e.IdIdentificacion).HasColumnName("ID_Identificacion");
-            entity.Property(e => e.IdJornadaLaboral).HasColumnName("ID_Jornada_Laboral");
             entity.Property(e => e.Nombre).HasMaxLength(100);
+            entity.Property(e => e.NumDocumento).HasMaxLength(11);
             entity.Property(e => e.Telefono).HasMaxLength(9);
 
             entity.HasOne(d => d.IdCargoNavigation).WithMany(p => p.Empleados)
@@ -310,7 +310,6 @@ public partial class FunerariaContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Servicios__ID_Se__5DCAEF64");
         });
-
 
         modelBuilder.Entity<TipoIdentificacion>(entity =>
         {
