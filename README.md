@@ -62,12 +62,13 @@ dotnet watch run
 - [ ] Jeyson - Libro de firma.
 - [ ] Melany - Aributo Categoria.
 - [ ] Jose Armando - Categoria.
-- [ ] Angel - defunciones.
+- [ ] Angel - Defunciones.
 - [ ] Juan - Factura_atributo.
 - [ ] Omar - Empleados.
 - [ ] Carlos - Sala.
 - [ ] Julian - Atributo.
 - [ ] Enmanuel - Cargo.
+- [ ] Emill - Tipo de identificaciones
 
 - [ ] Implementación de los DTO de cada Modelo.
 
