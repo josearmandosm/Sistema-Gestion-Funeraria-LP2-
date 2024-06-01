@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Gestion_Funeraria__LP2_.Models;
+using Sistema_Gestion_Funeraria__LP2_.Models.DTOs.Empleados;
 
 namespace Sistema_Gestion_Funeraria__LP2_.Controllers
 {
@@ -78,12 +78,19 @@ namespace Sistema_Gestion_Funeraria__LP2_.Controllers
         // POST: api/Empleado
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Empleado>> PostEmpleado([FromBody] Empleado empleado)
+        public async Task<ActionResult<Empleado>> PostEmpleado([FromBody] EmpleadoInsertDTO empleadoDto)
         {
+            var empleado = mapper.Map<Empleado>(empleadoDto);
+
+            if (EmpleadoExists(empleado.NumDocumento))
+            {
+                return BadRequest("Este empleado ya existe, favor verificar.");
+            }
+
             context.Empleados.Add(empleado);
             await context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEmpleado", new { id = empleado.IdEmpleado }, empleado);
+            return Ok(empleado.IdEmpleado);
         }
 
         // DELETE: api/Empleado/5
@@ -105,6 +112,11 @@ namespace Sistema_Gestion_Funeraria__LP2_.Controllers
         private bool EmpleadoExists(int id)
         {
             return context.Empleados.Any(e => e.IdEmpleado == id);
+        }
+
+        private bool EmpleadoExists(string numDocumento)
+        {
+            return context.Empleados.Any(e => e.NumDocumento == numDocumento);
         }
     }
 }
