@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 string connectionString = builder.Configuration.GetConnectionString("conexion");
 builder.Services.AddDbContext<FunerariaContext>(db => db.UseSqlServer(connectionString));
+builder.Services.AddLogging(builder => builder.AddConsole());
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
