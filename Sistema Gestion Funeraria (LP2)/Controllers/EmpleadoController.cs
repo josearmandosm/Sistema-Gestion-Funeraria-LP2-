@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sistema_Gestion_Funeraria__LP2_.Models;
 using Sistema_Gestion_Funeraria__LP2_.Models.DTOs.Empleados;
+using Sistema_Gestion_Funeraria__LP2_.Helper.Query;
 
 namespace Sistema_Gestion_Funeraria__LP2_.Controllers
 {
@@ -16,21 +13,36 @@ namespace Sistema_Gestion_Funeraria__LP2_.Controllers
     {
         private readonly FunerariaContext context;
         private readonly IMapper mapper;
+        private readonly ILogger<EmpleadoController> logger;
 
-        public EmpleadoController(FunerariaContext context, IMapper mapper)
+        public EmpleadoController(FunerariaContext context, IMapper mapper, ILogger<EmpleadoController> logger)
         {
             this.context = context;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
-        // GET: api/Empleado
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Empleado>>> GetEmpleados()
+        public async Task<ActionResult<IEnumerable<EmpleadoGetDTO>>> GetEmpleados([FromQuery] EmpleadoQueryObject query)
         {
-            return await context.Empleados.ToListAsync();
+            var empleados = context.Empleados.AsQueryable();
+
+            if (query != null)
+            {
+                empleados = query switch
+                {
+                    _ when !string.IsNullOrWhiteSpace(query.NumDocumento) => empleados.Where(s => s.NumDocumento.Contains(query.NumDocumento)),
+                    _ when !string.IsNullOrWhiteSpace(query.Nombre) => empleados.Where(s => s.Nombre.Contains(query.Nombre)),
+                    _ when !string.IsNullOrWhiteSpace(query.Telefono) => empleados.Where(s => s.Telefono.Contains(query.Telefono)),
+                    _ => empleados
+                };
+            }
+
+            var empleadosList = await empleados.ToListAsync();
+            var empleadosDto = mapper.Map<IEnumerable<EmpleadoGetDTO>>(empleadosList);
+            return Ok(empleadosDto);
         }
 
-        // GET: api/Empleado/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Empleado>> GetEmpleado([FromRoute] int id)
         {
@@ -38,22 +50,33 @@ namespace Sistema_Gestion_Funeraria__LP2_.Controllers
 
             if (empleado == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Status = StatusCodes.Status404NotFound,
+                    Title = "Empleado no encontrado",
+                    Detail = $"No se encontró un empleado con el ID {id}.",
+                    Instance = HttpContext.Request.Path
+                });
             }
 
             return empleado;
         }
 
-        // PUT: api/Empleado/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmpleado([FromRoute] int id, [FromBody] Empleado empleado)
+        public async Task<IActionResult> PutEmpleado([FromRoute] int id, [FromBody] EmpleadoUpdateDTO empleadoDto)
         {
-            if (id != empleado.IdEmpleado)
+            if (id != empleadoDto.IdEmpleado)
             {
-                return BadRequest();
+                return BadRequest(new ProblemDetails
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Title = "ID no coincide",
+                    Detail = "El ID proporcionado no coincide con el ID del empleado.",
+                    Instance = HttpContext.Request.Path
+                });
             }
 
+            var empleado = mapper.Map<Empleado>(empleadoDto);
             context.Entry(empleado).State = EntityState.Modified;
 
             try
@@ -62,9 +85,15 @@ namespace Sistema_Gestion_Funeraria__LP2_.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EmpleadoExists(id))
+                if (!await EmpleadoExists(id))
                 {
-                    return NotFound();
+                    return NotFound(new ProblemDetails
+                    {
+                        Status = StatusCodes.Status404NotFound,
+                        Title = "Empleado no encontrado",
+                        Detail = $"No se encontró un empleado con el ID {id}.",
+                        Instance = HttpContext.Request.Path
+                    });
                 }
                 else
                 {
@@ -75,32 +104,41 @@ namespace Sistema_Gestion_Funeraria__LP2_.Controllers
             return NoContent();
         }
 
-        // POST: api/Empleado
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Empleado>> PostEmpleado([FromBody] EmpleadoInsertDTO empleadoDto)
         {
             var empleado = mapper.Map<Empleado>(empleadoDto);
 
-            if (EmpleadoExists(empleado.NumDocumento))
+            if (await EmpleadoExists(empleado?.NumDocumento))
             {
-                return BadRequest("Este empleado ya existe, favor verificar.");
+                return BadRequest(new ProblemDetails
+                {
+                    Status = StatusCodes.Status400BadRequest,
+                    Title = "ID no coincide",
+                    Detail = "El ID proporcionado no coincide con el ID del empleado.",
+                    Instance = HttpContext.Request.Path
+                });
             }
 
-            context.Empleados.Add(empleado);
+            await context.Empleados.AddAsync(empleado);
             await context.SaveChangesAsync();
 
             return Ok(empleado.IdEmpleado);
         }
 
-        // DELETE: api/Empleado/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmpleado([FromRoute] int id)
         {
             var empleado = await context.Empleados.FindAsync(id);
             if (empleado == null)
             {
-                return NotFound();
+                return NotFound(new ProblemDetails
+                {
+                    Status = StatusCodes.Status404NotFound,
+                    Title = "Empleado no encontrado",
+                    Detail = $"No se encontró un empleado con el ID {id}.",
+                    Instance = HttpContext.Request.Path
+                });
             }
 
             context.Empleados.Remove(empleado);
@@ -109,14 +147,18 @@ namespace Sistema_Gestion_Funeraria__LP2_.Controllers
             return NoContent();
         }
 
-        private bool EmpleadoExists(int id)
+        private async Task<bool> EmpleadoExists(int id)
         {
-            return context.Empleados.Any(e => e.IdEmpleado == id);
+            bool existe = await context.Empleados.AnyAsync(x => x.IdEmpleado == id);
+            logger.LogInformation($"Empleado con {id}: {(existe ? "existe" : "No existe")}.");
+            return existe;
         }
 
-        private bool EmpleadoExists(string numDocumento)
+        private async Task<bool> EmpleadoExists(string numDocumento)
         {
-            return context.Empleados.Any(e => e.NumDocumento == numDocumento);
+            bool existe = await context.Empleados.AnyAsync(x => x.NumDocumento == numDocumento);
+            logger.LogInformation($"Empleado con número de documento \"{numDocumento}\": {(existe ? "existe" : "No existe")}.");
+            return existe;
         }
     }
 }
