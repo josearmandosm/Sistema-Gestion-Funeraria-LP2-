@@ -59,7 +59,8 @@ namespace Sistema_Gestion_Funeraria__LP2_.Controllers
                 });
             }
 
-            return empleado;
+            var empleadoDto = mapper.Map<EmpleadoGetDTO>(empleado);
+            return Ok(empleadoDto);
         }
 
         [HttpPut("{id}")]
