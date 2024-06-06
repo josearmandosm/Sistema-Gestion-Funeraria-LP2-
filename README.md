@@ -64,7 +64,7 @@ dotnet watch run
   - [ ] Juan - Factura_atributo.
   - [x] Omar - Empleados.
   - [ ] Carlos - Sala.
-  - [ ] Julian - Atributo.
+  - [x] Julian - Atributo. (Faltan DTOs)
   - [ ] Enmanuel - Cargo.
   - [ ] Emill - Tipo de identificaciones.
 
