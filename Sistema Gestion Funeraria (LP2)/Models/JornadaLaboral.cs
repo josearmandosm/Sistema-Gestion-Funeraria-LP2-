@@ -7,15 +7,11 @@ public partial class JornadaLaboral
 {
     public int IdJornadaLaboral { get; set; }
 
-    public int? IdEmpleado { get; set; }
-
     public int? IdLocalidad { get; set; }
 
     public DateOnly FechaEntrada { get; set; }
 
     public DateOnly FechaSalida { get; set; }
-
-    public virtual Empleado? IdEmpleadoNavigation { get; set; }
 
     public virtual Localidad? IdLocalidadNavigation { get; set; }
 }

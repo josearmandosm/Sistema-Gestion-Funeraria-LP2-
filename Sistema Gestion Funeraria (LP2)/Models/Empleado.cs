@@ -9,6 +9,8 @@ public partial class Empleado
 
     public int? IdIdentificacion { get; set; }
 
+    public int? IdJornadaLaboral { get; set; }
+
     public int? IdCargo { get; set; }
 
     public string Nombre { get; set; } = null!;
@@ -22,6 +24,4 @@ public partial class Empleado
     public virtual Cargo? IdCargoNavigation { get; set; }
 
     public virtual TipoIdentificacion? IdIdentificacionNavigation { get; set; }
-
-    public virtual ICollection<JornadaLaboral> JornadaLaborals { get; set; } = new List<JornadaLaboral>();
 }
