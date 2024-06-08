@@ -44,7 +44,7 @@ namespace Sistema_Gestion_Funeraria__LP2_.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Empleado>> GetEmpleado([FromRoute] int id)
+        public async Task<ActionResult<EmpleadoGetDTO>> GetEmpleado([FromRoute] int id)
         {
             var empleado = await context.Empleados.FindAsync(id);
 
