@@ -54,7 +54,7 @@ dotnet watch run
 ### BackEnd
 
 - [x] Análisis de requirimiento para la construcción de la Base de Datos.
-- [ ] Implementación de y mapeo de los DTO de cada Modelo.
+- [ ] Implementación de los DTO de cada modelo y su respectivo mapeo con AutoMapper.
 
 - [ ] Creación de los Controladores de los Modelos.
   - [ ] Jeyson - Libro de firma.
