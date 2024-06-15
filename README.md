@@ -68,6 +68,8 @@ dotnet watch run
   - [ ] Enmanuel - Cargo.
   - [ ] Emill - Tipo de identificaciones.
 
+- [ ] Implementación de capa de autenticación con JWT (JSON Web Token).
+
 ### FrontEnd
 
 - [ ] Implementación de formularios de reserva
