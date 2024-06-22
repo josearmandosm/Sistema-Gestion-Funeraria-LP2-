@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Sistema_Gestion_Funeraria__LP2_.Models;
@@ -10,6 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("conexion");
 builder.Services.AddDbContext<FunerariaContext>(db => db.UseSqlServer(connectionString));
 builder.Services.AddLogging(builder => builder.AddConsole());
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequiredLength = 12;
+})
+.AddEntityFrameworkStores<FunerariaContext>();
+
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

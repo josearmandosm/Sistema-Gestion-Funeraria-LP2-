@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_Gestion_Funeraria__LP2_.Models;
 
-public partial class FunerariaContext : DbContext
+public partial class FunerariaContext : IdentityDbContext<ApplicationUser>
 {
     public FunerariaContext()
     {
@@ -50,6 +51,8 @@ public partial class FunerariaContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Atributo>(entity =>
         {
             entity.HasKey(e => e.IdAtributo).HasName("PK__Atributo__5ECA4A186BBE52E3");
