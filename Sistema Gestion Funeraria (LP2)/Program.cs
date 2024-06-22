@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Sistema_Gestion_Funeraria__LP2_.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,25 @@ builder.Services.AddLogging(builder => builder.AddConsole());
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAuthentication(cfg => {
+    cfg.DefaultAuthenticateScheme = 
+    cfg.DefaultChallengeScheme = 
+    cfg.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x => {
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = false;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8
+            .GetBytes(builder.Configuration["ApplicationSettings:JWT_Secret"])
+        ),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+    };
+});
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddProblemDetails();
@@ -24,7 +46,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+// app.UseMiddleware<ManejoExcepcionMiddleware>();
 
 app.UseHttpsRedirection();
 
