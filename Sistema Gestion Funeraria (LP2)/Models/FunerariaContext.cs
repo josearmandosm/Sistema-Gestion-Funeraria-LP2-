@@ -18,21 +18,17 @@ public partial class FunerariaContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<Atributo> Atributos { get; set; }
 
-    public virtual DbSet<AtributoCategoria> AtributoCategorias { get; set; }
-
     public virtual DbSet<Cargo> Cargos { get; set; }
 
     public virtual DbSet<Categoria> Categorias { get; set; }
 
-    public virtual DbSet<Defuncione> Defunciones { get; set; }
+    public virtual DbSet<Difunto> Difuntos { get; set; }
 
     public virtual DbSet<Empleado> Empleados { get; set; }
 
-    public virtual DbSet<FacturacionesAtributo> FacturacionesAtributos { get; set; }
+    public virtual DbSet<FacturasServicio> FacturasServicios { get; set; }
 
-    public virtual DbSet<FacturacionesServicio> FacturacionesServicios { get; set; }
-
-    public virtual DbSet<JornadaLaboral> JornadaLaborals { get; set; }
+    public virtual DbSet<JornadaLaborale> JornadaLaborales { get; set; }
 
     public virtual DbSet<LibroFirma> LibroFirmas { get; set; }
 
@@ -44,57 +40,49 @@ public partial class FunerariaContext : IdentityDbContext<ApplicationUser>
 
     public virtual DbSet<ServiciosCategoria> ServiciosCategorias { get; set; }
 
-    public virtual DbSet<TipoIdentificacion> TipoIdentificacions { get; set; }
+    public virtual DbSet<TipoIdentificacione> TipoIdentificaciones { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("name=conexion");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Atributo>(entity =>
         {
             entity.HasKey(e => e.IdAtributo).HasName("PK__Atributo__5ECA4A186BBE52E3");
 
-            entity.ToTable("Atributo");
-
             entity.Property(e => e.IdAtributo).HasColumnName("ID_Atributo");
-            entity.Property(e => e.Costo).HasColumnType("money");
             entity.Property(e => e.Descripcion).HasMaxLength(200);
             entity.Property(e => e.Nombre).HasMaxLength(100);
-        });
 
-        modelBuilder.Entity<AtributoCategoria>(entity =>
-        {
-            entity.HasKey(e => new { e.IdAtributo, e.IdCategoria }).HasName("PK__Atributo__1EE0EA6043280821");
-
-            entity.ToTable("Atributo_Categorias");
-
-            entity.Property(e => e.IdAtributo).HasColumnName("ID_Atributo");
-            entity.Property(e => e.IdCategoria).HasColumnName("ID_Categoria");
-            entity.Property(e => e.Costo).HasColumnType("money");
-
-            entity.HasOne(d => d.IdAtributoNavigation).WithMany(p => p.AtributoCategoria)
-                .HasForeignKey(d => d.IdAtributo)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Atributo___ID_At__2E1BDC42");
-
-            entity.HasOne(d => d.IdCategoriaNavigation).WithMany(p => p.AtributoCategoria)
-                .HasForeignKey(d => d.IdCategoria)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Atributo___ID_Ca__2F10007B");
+            entity.HasMany(d => d.IdCategoria).WithMany(p => p.IdAtributos)
+                .UsingEntity<Dictionary<string, object>>(
+                    "AtributosCategoria",
+                    r => r.HasOne<Categoria>().WithMany()
+                        .HasForeignKey("IdCategoria")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK__Atributo___ID_Ca__2F10007B"),
+                    l => l.HasOne<Atributo>().WithMany()
+                        .HasForeignKey("IdAtributo")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK__Atributo___ID_At__2E1BDC42"),
+                    j =>
+                    {
+                        j.HasKey("IdAtributo", "IdCategoria").HasName("PK__Atributo__1EE0EA6043280821");
+                        j.ToTable("Atributos_Categorias");
+                        j.IndexerProperty<int>("IdAtributo").HasColumnName("ID_Atributo");
+                        j.IndexerProperty<int>("IdCategoria").HasColumnName("ID_Categoria");
+                    });
         });
 
         modelBuilder.Entity<Cargo>(entity =>
         {
             entity.HasKey(e => e.IdCargo).HasName("PK__Cargo__8D69B95FB68199D1");
 
-            entity.ToTable("Cargo");
-
             entity.Property(e => e.IdCargo).HasColumnName("ID_Cargo");
             entity.Property(e => e.Descripcion).HasMaxLength(200);
-            entity.Property(e => e.Nombre).HasMaxLength(100);
+            entity.Property(e => e.Nombre).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Categoria>(entity =>
@@ -105,43 +93,43 @@ public partial class FunerariaContext : IdentityDbContext<ApplicationUser>
             entity.Property(e => e.Descripcion).HasMaxLength(200);
             entity.Property(e => e.Nombre).HasMaxLength(100);
             entity.Property(e => e.TotalCobertura)
-                .HasColumnType("money")
+                .HasColumnType("decimal(12, 2)")
                 .HasColumnName("Total_Cobertura");
         });
 
-        modelBuilder.Entity<Defuncione>(entity =>
+        modelBuilder.Entity<Difunto>(entity =>
         {
-            entity.HasKey(e => e.IdDefuncion).HasName("PK__Defuncio__E05EBEA85A1B991F");
+            entity.HasKey(e => e.IdDifunto).HasName("PK__Defuncio__E05EBEA85A1B991F");
 
-            entity.Property(e => e.IdDefuncion).HasColumnName("ID_Defuncion");
+            entity.Property(e => e.IdDifunto)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("ID_Difunto");
             entity.Property(e => e.CertificacionDefuncion)
                 .HasColumnType("image")
                 .HasColumnName("Certificacion_Defuncion");
             entity.Property(e => e.FechaFallecimiento).HasColumnName("Fecha_Fallecimiento");
-            entity.Property(e => e.FechaNacimiento).HasColumnName("Fecha_Nacimiento");
             entity.Property(e => e.HorarioEntrada).HasColumnName("Horario_Entrada");
             entity.Property(e => e.HorarioSalida).HasColumnName("Horario_Salida");
-            entity.Property(e => e.IdIdentificacion).HasColumnName("ID_Identificacion");
             entity.Property(e => e.IdSala).HasColumnName("ID_Sala");
+            entity.Property(e => e.IdTipoIdentificacion).HasColumnName("ID_TipoIdentificacion");
             entity.Property(e => e.Identificacion).HasMaxLength(11);
             entity.Property(e => e.NombreDifunto)
                 .HasMaxLength(100)
                 .HasColumnName("Nombre_Difunto");
             entity.Property(e => e.Representante).HasMaxLength(100);
-            entity.Property(e => e.RepresentanteDireccion)
-                .HasMaxLength(200)
-                .HasColumnName("Representante_Direccion");
             entity.Property(e => e.RepresentanteTelefono)
                 .HasMaxLength(9)
                 .HasColumnName("Representante_Telefono");
 
-            entity.HasOne(d => d.IdIdentificacionNavigation).WithMany(p => p.Defunciones)
-                .HasForeignKey(d => d.IdIdentificacion)
-                .HasConstraintName("FK__Defuncion__ID_Id__3A81B327");
+            entity.HasOne(d => d.IdDifuntoNavigation).WithOne(p => p.Difunto)
+                .HasForeignKey<Difunto>(d => d.IdDifunto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Difuntos_Tipo_Identificaciones");
 
-            entity.HasOne(d => d.IdSalaNavigation).WithMany(p => p.Defunciones)
+            entity.HasOne(d => d.IdSalaNavigation).WithMany(p => p.Difuntos)
                 .HasForeignKey(d => d.IdSala)
-                .HasConstraintName("FK__Defuncion__ID_Sa__398D8EEE");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Difuntos_Salas");
         });
 
         modelBuilder.Entity<Empleado>(entity =>
@@ -151,95 +139,78 @@ public partial class FunerariaContext : IdentityDbContext<ApplicationUser>
             entity.Property(e => e.IdEmpleado).HasColumnName("ID_Empleado");
             entity.Property(e => e.Direccion).HasMaxLength(200);
             entity.Property(e => e.IdCargo).HasColumnName("ID_Cargo");
-            entity.Property(e => e.IdIdentificacion).HasColumnName("ID_Identificacion");
             entity.Property(e => e.IdJornadaLaboral).HasColumnName("ID_Jornada_Laboral");
+            entity.Property(e => e.IdLocalidad).HasColumnName("ID_Localidad");
+            entity.Property(e => e.IdTipoIdentificacion).HasColumnName("ID_TipoIdentificacion");
             entity.Property(e => e.Nombre).HasMaxLength(100);
             entity.Property(e => e.NumDocumento).HasMaxLength(11);
             entity.Property(e => e.Telefono).HasMaxLength(10);
 
             entity.HasOne(d => d.IdCargoNavigation).WithMany(p => p.Empleados)
                 .HasForeignKey(d => d.IdCargo)
-                .HasConstraintName("FK__Empleados__ID_Ca__403A8C7D");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Empleados_Cargos");
 
-            entity.HasOne(d => d.IdIdentificacionNavigation).WithMany(p => p.Empleados)
-                .HasForeignKey(d => d.IdIdentificacion)
-                .HasConstraintName("FK__Empleados__ID_Id__3F466844");
+            entity.HasOne(d => d.IdJornadaLaboralNavigation).WithMany(p => p.Empleados)
+                .HasForeignKey(d => d.IdJornadaLaboral)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Empleados_Jornada_Laborales");
+
+            entity.HasOne(d => d.IdLocalidadNavigation).WithMany(p => p.Empleados)
+                .HasForeignKey(d => d.IdLocalidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Empleados_Localidad");
+
+            entity.HasOne(d => d.IdTipoIdentificacionNavigation).WithMany(p => p.Empleados)
+                .HasForeignKey(d => d.IdTipoIdentificacion)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Empleados_Tipo_Identificaciones");
         });
 
-        modelBuilder.Entity<FacturacionesAtributo>(entity =>
+        modelBuilder.Entity<FacturasServicio>(entity =>
         {
-            entity.HasKey(e => new { e.IdAtributo, e.IdDefuncion }).HasName("PK__Facturac__C0CFA1F2AB574138");
+            entity.HasKey(e => new { e.IdServicio, e.IdDifunto }).HasName("PK__Facturac__87371E6E5CF4A5BB");
 
-            entity.ToTable("Facturaciones_Atributo");
-
-            entity.Property(e => e.IdAtributo).HasColumnName("ID_Atributo");
-            entity.Property(e => e.IdDefuncion).HasColumnName("ID_Defuncion");
-            entity.Property(e => e.Costo).HasColumnType("money");
-
-            entity.HasOne(d => d.IdAtributoNavigation).WithMany(p => p.FacturacionesAtributos)
-                .HasForeignKey(d => d.IdAtributo)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Facturaci__ID_At__49C3F6B7");
-
-            entity.HasOne(d => d.IdDefuncionNavigation).WithMany(p => p.FacturacionesAtributos)
-                .HasForeignKey(d => d.IdDefuncion)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Facturaci__ID_De__4AB81AF0");
-        });
-
-        modelBuilder.Entity<FacturacionesServicio>(entity =>
-        {
-            entity.HasKey(e => new { e.IdServicio, e.IdDefuncion }).HasName("PK__Facturac__87371E6E5CF4A5BB");
-
-            entity.ToTable("Facturaciones_Servicios");
+            entity.ToTable("Facturas_Servicios");
 
             entity.Property(e => e.IdServicio).HasColumnName("ID_Servicio");
-            entity.Property(e => e.IdDefuncion).HasColumnName("ID_Defuncion");
-            entity.Property(e => e.Costo).HasColumnType("money");
+            entity.Property(e => e.IdDifunto).HasColumnName("ID_Difunto");
+            entity.Property(e => e.Costo).HasColumnType("decimal(12, 2)");
 
-            entity.HasOne(d => d.IdDefuncionNavigation).WithMany(p => p.FacturacionesServicios)
-                .HasForeignKey(d => d.IdDefuncion)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Facturaci__ID_De__4E88ABD4");
-
-            entity.HasOne(d => d.IdServicioNavigation).WithMany(p => p.FacturacionesServicios)
+            entity.HasOne(d => d.IdServicioNavigation).WithMany(p => p.FacturasServicios)
                 .HasForeignKey(d => d.IdServicio)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Facturaci__ID_Se__4D94879B");
         });
 
-        modelBuilder.Entity<JornadaLaboral>(entity =>
+        modelBuilder.Entity<JornadaLaborale>(entity =>
         {
             entity.HasKey(e => e.IdJornadaLaboral).HasName("PK__Jornada___4D9539810E0370F1");
 
-            entity.ToTable("Jornada_Laboral");
+            entity.ToTable("Jornada_Laborales");
 
             entity.Property(e => e.IdJornadaLaboral).HasColumnName("ID_Jornada_Laboral");
             entity.Property(e => e.FechaEntrada).HasColumnName("Fecha_Entrada");
             entity.Property(e => e.FechaSalida).HasColumnName("Fecha_Salida");
-            entity.Property(e => e.IdLocalidad).HasColumnName("ID_Localidad");
-
-            entity.HasOne(d => d.IdLocalidadNavigation).WithMany(p => p.JornadaLaborals)
-                .HasForeignKey(d => d.IdLocalidad)
-                .HasConstraintName("FK__Jornada_L__ID_Lo__440B1D61");
         });
 
         modelBuilder.Entity<LibroFirma>(entity =>
         {
             entity.HasKey(e => e.IdLibroFirma).HasName("PK__Libro_Fi__4A04D334864E53AC");
 
-            entity.ToTable("Libro_Firma");
+            entity.ToTable("Libro_Firmas");
 
             entity.Property(e => e.IdLibroFirma).HasColumnName("ID_Libro_Firma");
-            entity.Property(e => e.IdDefuncion).HasColumnName("ID_Defuncion");
+            entity.Property(e => e.IdDifunto).HasColumnName("ID_Difunto");
             entity.Property(e => e.Mensaje).HasMaxLength(500);
             entity.Property(e => e.NombreFirma)
                 .HasMaxLength(100)
                 .HasColumnName("Nombre_Firma");
 
-            entity.HasOne(d => d.IdDefuncionNavigation).WithMany(p => p.LibroFirmas)
-                .HasForeignKey(d => d.IdDefuncion)
-                .HasConstraintName("FK__Libro_Fir__ID_De__46E78A0C");
+            entity.HasOne(d => d.IdDifuntoNavigation).WithMany(p => p.LibroFirmas)
+                .HasForeignKey(d => d.IdDifunto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Libro_Firmas_Difuntos");
         });
 
         modelBuilder.Entity<Localidad>(entity =>
@@ -250,10 +221,8 @@ public partial class FunerariaContext : IdentityDbContext<ApplicationUser>
 
             entity.Property(e => e.IdLocalidad).HasColumnName("ID_Localidad");
             entity.Property(e => e.Direccion).HasMaxLength(200);
-            entity.Property(e => e.IdContacto1).HasColumnName("ID_Contacto1");
-            entity.Property(e => e.IdContacto2).HasColumnName("ID_Contacto2");
             entity.Property(e => e.Nombre).HasMaxLength(100);
-            entity.Property(e => e.Telefono).HasMaxLength(9);
+            entity.Property(e => e.Telefono).HasMaxLength(10);
         });
 
         modelBuilder.Entity<Sala>(entity =>
@@ -271,10 +240,12 @@ public partial class FunerariaContext : IdentityDbContext<ApplicationUser>
 
             entity.HasOne(d => d.IdCategoriaNavigation).WithMany(p => p.Salas)
                 .HasForeignKey(d => d.IdCategoria)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Salas__ID_Catego__29572725");
 
             entity.HasOne(d => d.IdLocalidadNavigation).WithMany(p => p.Salas)
                 .HasForeignKey(d => d.IdLocalidad)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Salas__ID_Locali__286302EC");
         });
 
@@ -283,9 +254,9 @@ public partial class FunerariaContext : IdentityDbContext<ApplicationUser>
             entity.HasKey(e => e.IdServicio).HasName("PK__Servicio__1932F584415698B8");
 
             entity.Property(e => e.IdServicio).HasColumnName("ID_Servicio");
-            entity.Property(e => e.Costo).HasColumnType("money");
+            entity.Property(e => e.Costo).HasColumnType("decimal(12, 2)");
             entity.Property(e => e.Descripcion).HasMaxLength(200);
-            entity.Property(e => e.Nombre).HasMaxLength(100);
+            entity.Property(e => e.Nombre).HasMaxLength(50);
         });
 
         modelBuilder.Entity<ServiciosCategoria>(entity =>
@@ -296,7 +267,7 @@ public partial class FunerariaContext : IdentityDbContext<ApplicationUser>
 
             entity.Property(e => e.IdServicio).HasColumnName("ID_Servicio");
             entity.Property(e => e.IdCategoria).HasColumnName("ID_Categoria");
-            entity.Property(e => e.Costo).HasColumnType("money");
+            entity.Property(e => e.Costo).HasColumnType("decimal(12, 2)");
 
             entity.HasOne(d => d.IdCategoriaNavigation).WithMany(p => p.ServiciosCategoria)
                 .HasForeignKey(d => d.IdCategoria)
@@ -309,13 +280,13 @@ public partial class FunerariaContext : IdentityDbContext<ApplicationUser>
                 .HasConstraintName("FK__Servicios__ID_Se__33D4B598");
         });
 
-        modelBuilder.Entity<TipoIdentificacion>(entity =>
+        modelBuilder.Entity<TipoIdentificacione>(entity =>
         {
-            entity.HasKey(e => e.IdIdentificacion).HasName("PK__Tipo_Ide__2D8D9EE1D17D799B");
+            entity.HasKey(e => e.IdTipoIdentificacion).HasName("PK__Tipo_Ide__2D8D9EE1D17D799B");
 
-            entity.ToTable("Tipo_Identificacion");
+            entity.ToTable("Tipo_Identificaciones");
 
-            entity.Property(e => e.IdIdentificacion).HasColumnName("ID_Identificacion");
+            entity.Property(e => e.IdTipoIdentificacion).HasColumnName("ID_TipoIdentificacion");
             entity.Property(e => e.Nombre).HasMaxLength(100);
         });
 

@@ -9,8 +9,6 @@ public partial class AtributoCategoria
 
     public int IdCategoria { get; set; }
 
-    public decimal Costo { get; set; }
-
     public virtual Atributo IdAtributoNavigation { get; set; } = null!;
 
     public virtual Categoria IdCategoriaNavigation { get; set; } = null!;

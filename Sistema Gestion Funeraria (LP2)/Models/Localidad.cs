@@ -13,11 +13,7 @@ public partial class Localidad
 
     public string Telefono { get; set; } = null!;
 
-    public int? IdContacto1 { get; set; }
-
-    public int? IdContacto2 { get; set; }
-
-    public virtual ICollection<JornadaLaboral> JornadaLaborals { get; set; } = new List<JornadaLaboral>();
+    public virtual ICollection<Empleado> Empleados { get; set; } = new List<Empleado>();
 
     public virtual ICollection<Sala> Salas { get; set; } = new List<Sala>();
 }

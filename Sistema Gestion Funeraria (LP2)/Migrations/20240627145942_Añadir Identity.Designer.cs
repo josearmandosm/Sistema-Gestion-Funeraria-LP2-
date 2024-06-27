@@ -12,8 +12,8 @@ using Sistema_Gestion_Funeraria__LP2_.Models;
 namespace Sistema_Gestion_Funeraria__LP2_.Migrations
 {
     [DbContext(typeof(FunerariaContext))]
-    [Migration("20240622224020_Initial")]
-    partial class Initial
+    [Migration("20240627145942_Añadir Identity")]
+    partial class AñadirIdentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,38 +25,7 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Atributo", b =>
-                {
-                    b.Property<int>("IdAtributo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ID_Atributo");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdAtributo"));
-
-                    b.Property<decimal>("Costo")
-                        .HasColumnType("money");
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<bool>("Estatus")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("IdAtributo")
-                        .HasName("PK__Atributo__5ECA4A186BBE52E3");
-
-                    b.ToTable("Atributo", (string)null);
-                });
-
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.AtributoCategoria", b =>
+            modelBuilder.Entity("AtributosCategoria", b =>
                 {
                     b.Property<int>("IdAtributo")
                         .HasColumnType("int")
@@ -66,15 +35,235 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                         .HasColumnType("int")
                         .HasColumnName("ID_Categoria");
 
-                    b.Property<decimal>("Costo")
-                        .HasColumnType("money");
-
                     b.HasKey("IdAtributo", "IdCategoria")
                         .HasName("PK__Atributo__1EE0EA6043280821");
 
                     b.HasIndex("IdCategoria");
 
-                    b.ToTable("Atributo_Categorias", (string)null);
+                    b.ToTable("Atributos_Categorias", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Atributo", b =>
+                {
+                    b.Property<int>("IdAtributo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID_Atributo");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdAtributo"));
+
+                    b.Property<string>("Descripcion")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("IdAtributo")
+                        .HasName("PK__Atributo__5ECA4A186BBE52E3");
+
+                    b.ToTable("Atributos");
                 });
 
             modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Cargo", b =>
@@ -93,13 +282,13 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("IdCargo")
                         .HasName("PK__Cargo__8D69B95FB68199D1");
 
-                    b.ToTable("Cargo", (string)null);
+                    b.ToTable("Cargos");
                 });
 
             modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Categoria", b =>
@@ -112,7 +301,6 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCategoria"));
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -122,7 +310,7 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("TotalCobertura")
-                        .HasColumnType("money")
+                        .HasColumnType("decimal(12, 2)")
                         .HasColumnName("Total_Cobertura");
 
                     b.HasKey("IdCategoria")
@@ -131,14 +319,12 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                     b.ToTable("Categorias");
                 });
 
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Defuncione", b =>
+            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Difunto", b =>
                 {
-                    b.Property<int>("IdDefuncion")
+                    b.Property<int>("IdDifunto")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("ID_Defuncion");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdDefuncion"));
+                        .HasColumnName("ID_Difunto");
 
                     b.Property<byte[]>("CertificacionDefuncion")
                         .IsRequired()
@@ -149,10 +335,6 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                         .HasColumnType("date")
                         .HasColumnName("Fecha_Fallecimiento");
 
-                    b.Property<DateOnly>("FechaNacimiento")
-                        .HasColumnType("date")
-                        .HasColumnName("Fecha_Nacimiento");
-
                     b.Property<TimeOnly>("HorarioEntrada")
                         .HasColumnType("time")
                         .HasColumnName("Horario_Entrada");
@@ -161,13 +343,13 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                         .HasColumnType("time")
                         .HasColumnName("Horario_Salida");
 
-                    b.Property<int?>("IdIdentificacion")
-                        .HasColumnType("int")
-                        .HasColumnName("ID_Identificacion");
-
-                    b.Property<int?>("IdSala")
+                    b.Property<int>("IdSala")
                         .HasColumnType("int")
                         .HasColumnName("ID_Sala");
+
+                    b.Property<int>("IdTipoIdentificacion")
+                        .HasColumnType("int")
+                        .HasColumnName("ID_TipoIdentificacion");
 
                     b.Property<string>("Identificacion")
                         .IsRequired()
@@ -185,26 +367,17 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("RepresentanteDireccion")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("Representante_Direccion");
-
                     b.Property<string>("RepresentanteTelefono")
-                        .IsRequired()
                         .HasMaxLength(9)
                         .HasColumnType("nvarchar(9)")
                         .HasColumnName("Representante_Telefono");
 
-                    b.HasKey("IdDefuncion")
+                    b.HasKey("IdDifunto")
                         .HasName("PK__Defuncio__E05EBEA85A1B991F");
-
-                    b.HasIndex("IdIdentificacion");
 
                     b.HasIndex("IdSala");
 
-                    b.ToTable("Defunciones");
+                    b.ToTable("Difuntos");
                 });
 
             modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Empleado", b =>
@@ -217,21 +390,24 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdEmpleado"));
 
                     b.Property<string>("Direccion")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("IdCargo")
+                    b.Property<int>("IdCargo")
                         .HasColumnType("int")
                         .HasColumnName("ID_Cargo");
 
-                    b.Property<int?>("IdIdentificacion")
-                        .HasColumnType("int")
-                        .HasColumnName("ID_Identificacion");
-
-                    b.Property<int?>("IdJornadaLaboral")
+                    b.Property<int>("IdJornadaLaboral")
                         .HasColumnType("int")
                         .HasColumnName("ID_Jornada_Laboral");
+
+                    b.Property<int>("IdLocalidad")
+                        .HasColumnType("int")
+                        .HasColumnName("ID_Localidad");
+
+                    b.Property<int>("IdTipoIdentificacion")
+                        .HasColumnType("int")
+                        .HasColumnName("ID_TipoIdentificacion");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -239,6 +415,7 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NumDocumento")
+                        .IsRequired()
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
 
@@ -252,54 +429,35 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
 
                     b.HasIndex("IdCargo");
 
-                    b.HasIndex("IdIdentificacion");
+                    b.HasIndex("IdJornadaLaboral");
+
+                    b.HasIndex("IdLocalidad");
+
+                    b.HasIndex("IdTipoIdentificacion");
 
                     b.ToTable("Empleados");
                 });
 
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.FacturacionesAtributo", b =>
-                {
-                    b.Property<int>("IdAtributo")
-                        .HasColumnType("int")
-                        .HasColumnName("ID_Atributo");
-
-                    b.Property<int>("IdDefuncion")
-                        .HasColumnType("int")
-                        .HasColumnName("ID_Defuncion");
-
-                    b.Property<decimal>("Costo")
-                        .HasColumnType("money");
-
-                    b.HasKey("IdAtributo", "IdDefuncion")
-                        .HasName("PK__Facturac__C0CFA1F2AB574138");
-
-                    b.HasIndex("IdDefuncion");
-
-                    b.ToTable("Facturaciones_Atributo", (string)null);
-                });
-
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.FacturacionesServicio", b =>
+            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.FacturasServicio", b =>
                 {
                     b.Property<int>("IdServicio")
                         .HasColumnType("int")
                         .HasColumnName("ID_Servicio");
 
-                    b.Property<int>("IdDefuncion")
+                    b.Property<int>("IdDifunto")
                         .HasColumnType("int")
-                        .HasColumnName("ID_Defuncion");
+                        .HasColumnName("ID_Difunto");
 
                     b.Property<decimal>("Costo")
-                        .HasColumnType("money");
+                        .HasColumnType("decimal(12, 2)");
 
-                    b.HasKey("IdServicio", "IdDefuncion")
+                    b.HasKey("IdServicio", "IdDifunto")
                         .HasName("PK__Facturac__87371E6E5CF4A5BB");
 
-                    b.HasIndex("IdDefuncion");
-
-                    b.ToTable("Facturaciones_Servicios", (string)null);
+                    b.ToTable("Facturas_Servicios", (string)null);
                 });
 
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.JornadaLaboral", b =>
+            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.JornadaLaborale", b =>
                 {
                     b.Property<int>("IdJornadaLaboral")
                         .ValueGeneratedOnAdd()
@@ -316,16 +474,10 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                         .HasColumnType("date")
                         .HasColumnName("Fecha_Salida");
 
-                    b.Property<int?>("IdLocalidad")
-                        .HasColumnType("int")
-                        .HasColumnName("ID_Localidad");
-
                     b.HasKey("IdJornadaLaboral")
                         .HasName("PK__Jornada___4D9539810E0370F1");
 
-                    b.HasIndex("IdLocalidad");
-
-                    b.ToTable("Jornada_Laboral", (string)null);
+                    b.ToTable("Jornada_Laborales", (string)null);
                 });
 
             modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.LibroFirma", b =>
@@ -337,9 +489,9 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdLibroFirma"));
 
-                    b.Property<int?>("IdDefuncion")
+                    b.Property<int>("IdDifunto")
                         .HasColumnType("int")
-                        .HasColumnName("ID_Defuncion");
+                        .HasColumnName("ID_Difunto");
 
                     b.Property<string>("Mensaje")
                         .HasMaxLength(500)
@@ -354,9 +506,9 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                     b.HasKey("IdLibroFirma")
                         .HasName("PK__Libro_Fi__4A04D334864E53AC");
 
-                    b.HasIndex("IdDefuncion");
+                    b.HasIndex("IdDifunto");
 
-                    b.ToTable("Libro_Firma", (string)null);
+                    b.ToTable("Libro_Firmas", (string)null);
                 });
 
             modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Localidad", b =>
@@ -373,14 +525,6 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int?>("IdContacto1")
-                        .HasColumnType("int")
-                        .HasColumnName("ID_Contacto1");
-
-                    b.Property<int?>("IdContacto2")
-                        .HasColumnType("int")
-                        .HasColumnName("ID_Contacto2");
-
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -388,8 +532,8 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
 
                     b.Property<string>("Telefono")
                         .IsRequired()
-                        .HasMaxLength(9)
-                        .HasColumnType("nvarchar(9)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("IdLocalidad")
                         .HasName("PK__Localida__8ACE3DA1F196609E");
@@ -416,11 +560,11 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                         .HasColumnType("char(1)")
                         .IsFixedLength();
 
-                    b.Property<int?>("IdCategoria")
+                    b.Property<int>("IdCategoria")
                         .HasColumnType("int")
                         .HasColumnName("ID_Categoria");
 
-                    b.Property<int?>("IdLocalidad")
+                    b.Property<int>("IdLocalidad")
                         .HasColumnType("int")
                         .HasColumnName("ID_Localidad");
 
@@ -449,7 +593,7 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdServicio"));
 
                     b.Property<decimal>("Costo")
-                        .HasColumnType("money");
+                        .HasColumnType("decimal(12, 2)");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
@@ -458,8 +602,8 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("IdServicio")
                         .HasName("PK__Servicio__1932F584415698B8");
@@ -478,7 +622,7 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                         .HasColumnName("ID_Categoria");
 
                     b.Property<decimal>("Costo")
-                        .HasColumnType("money");
+                        .HasColumnType("decimal(12, 2)");
 
                     b.HasKey("IdServicio", "IdCategoria")
                         .HasName("PK__Servicio__591855FC0A40FA83");
@@ -488,58 +632,107 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                     b.ToTable("Servicios_Categorias", (string)null);
                 });
 
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.TipoIdentificacion", b =>
+            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.TipoIdentificacione", b =>
                 {
-                    b.Property<int>("IdIdentificacion")
+                    b.Property<int>("IdTipoIdentificacion")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("ID_Identificacion");
+                        .HasColumnName("ID_TipoIdentificacion");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdIdentificacion"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTipoIdentificacion"));
 
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("IdIdentificacion")
+                    b.HasKey("IdTipoIdentificacion")
                         .HasName("PK__Tipo_Ide__2D8D9EE1D17D799B");
 
-                    b.ToTable("Tipo_Identificacion", (string)null);
+                    b.ToTable("Tipo_Identificaciones", (string)null);
                 });
 
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.AtributoCategoria", b =>
+            modelBuilder.Entity("AtributosCategoria", b =>
                 {
-                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Atributo", "IdAtributoNavigation")
-                        .WithMany("AtributoCategoria")
+                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Atributo", null)
+                        .WithMany()
                         .HasForeignKey("IdAtributo")
                         .IsRequired()
                         .HasConstraintName("FK__Atributo___ID_At__2E1BDC42");
 
-                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Categoria", "IdCategoriaNavigation")
-                        .WithMany("AtributoCategoria")
+                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Categoria", null)
+                        .WithMany()
                         .HasForeignKey("IdCategoria")
                         .IsRequired()
                         .HasConstraintName("FK__Atributo___ID_Ca__2F10007B");
-
-                    b.Navigation("IdAtributoNavigation");
-
-                    b.Navigation("IdCategoriaNavigation");
                 });
 
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Defuncione", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.TipoIdentificacion", "IdIdentificacionNavigation")
-                        .WithMany("Defunciones")
-                        .HasForeignKey("IdIdentificacion")
-                        .HasConstraintName("FK__Defuncion__ID_Id__3A81B327");
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Difunto", b =>
+                {
+                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.TipoIdentificacione", "IdDifuntoNavigation")
+                        .WithOne("Difunto")
+                        .HasForeignKey("Sistema_Gestion_Funeraria__LP2_.Models.Difunto", "IdDifunto")
+                        .IsRequired()
+                        .HasConstraintName("FK_Difuntos_Tipo_Identificaciones");
 
                     b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Sala", "IdSalaNavigation")
-                        .WithMany("Defunciones")
+                        .WithMany("Difuntos")
                         .HasForeignKey("IdSala")
-                        .HasConstraintName("FK__Defuncion__ID_Sa__398D8EEE");
+                        .IsRequired()
+                        .HasConstraintName("FK_Difuntos_Salas");
 
-                    b.Navigation("IdIdentificacionNavigation");
+                    b.Navigation("IdDifuntoNavigation");
 
                     b.Navigation("IdSalaNavigation");
                 });
@@ -549,74 +742,56 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                     b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Cargo", "IdCargoNavigation")
                         .WithMany("Empleados")
                         .HasForeignKey("IdCargo")
-                        .HasConstraintName("FK__Empleados__ID_Ca__403A8C7D");
+                        .IsRequired()
+                        .HasConstraintName("FK_Empleados_Cargos");
 
-                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.TipoIdentificacion", "IdIdentificacionNavigation")
+                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.JornadaLaborale", "IdJornadaLaboralNavigation")
                         .WithMany("Empleados")
-                        .HasForeignKey("IdIdentificacion")
-                        .HasConstraintName("FK__Empleados__ID_Id__3F466844");
+                        .HasForeignKey("IdJornadaLaboral")
+                        .IsRequired()
+                        .HasConstraintName("FK_Empleados_Jornada_Laborales");
+
+                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Localidad", "IdLocalidadNavigation")
+                        .WithMany("Empleados")
+                        .HasForeignKey("IdLocalidad")
+                        .IsRequired()
+                        .HasConstraintName("FK_Empleados_Localidad");
+
+                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.TipoIdentificacione", "IdTipoIdentificacionNavigation")
+                        .WithMany("Empleados")
+                        .HasForeignKey("IdTipoIdentificacion")
+                        .IsRequired()
+                        .HasConstraintName("FK_Empleados_Tipo_Identificaciones");
 
                     b.Navigation("IdCargoNavigation");
 
-                    b.Navigation("IdIdentificacionNavigation");
+                    b.Navigation("IdJornadaLaboralNavigation");
+
+                    b.Navigation("IdLocalidadNavigation");
+
+                    b.Navigation("IdTipoIdentificacionNavigation");
                 });
 
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.FacturacionesAtributo", b =>
+            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.FacturasServicio", b =>
                 {
-                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Atributo", "IdAtributoNavigation")
-                        .WithMany("FacturacionesAtributos")
-                        .HasForeignKey("IdAtributo")
-                        .IsRequired()
-                        .HasConstraintName("FK__Facturaci__ID_At__49C3F6B7");
-
-                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Defuncione", "IdDefuncionNavigation")
-                        .WithMany("FacturacionesAtributos")
-                        .HasForeignKey("IdDefuncion")
-                        .IsRequired()
-                        .HasConstraintName("FK__Facturaci__ID_De__4AB81AF0");
-
-                    b.Navigation("IdAtributoNavigation");
-
-                    b.Navigation("IdDefuncionNavigation");
-                });
-
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.FacturacionesServicio", b =>
-                {
-                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Defuncione", "IdDefuncionNavigation")
-                        .WithMany("FacturacionesServicios")
-                        .HasForeignKey("IdDefuncion")
-                        .IsRequired()
-                        .HasConstraintName("FK__Facturaci__ID_De__4E88ABD4");
-
                     b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Servicio", "IdServicioNavigation")
-                        .WithMany("FacturacionesServicios")
+                        .WithMany("FacturasServicios")
                         .HasForeignKey("IdServicio")
                         .IsRequired()
                         .HasConstraintName("FK__Facturaci__ID_Se__4D94879B");
 
-                    b.Navigation("IdDefuncionNavigation");
-
                     b.Navigation("IdServicioNavigation");
-                });
-
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.JornadaLaboral", b =>
-                {
-                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Localidad", "IdLocalidadNavigation")
-                        .WithMany("JornadaLaborals")
-                        .HasForeignKey("IdLocalidad")
-                        .HasConstraintName("FK__Jornada_L__ID_Lo__440B1D61");
-
-                    b.Navigation("IdLocalidadNavigation");
                 });
 
             modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.LibroFirma", b =>
                 {
-                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Defuncione", "IdDefuncionNavigation")
+                    b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Difunto", "IdDifuntoNavigation")
                         .WithMany("LibroFirmas")
-                        .HasForeignKey("IdDefuncion")
-                        .HasConstraintName("FK__Libro_Fir__ID_De__46E78A0C");
+                        .HasForeignKey("IdDifunto")
+                        .IsRequired()
+                        .HasConstraintName("FK_Libro_Firmas_Difuntos");
 
-                    b.Navigation("IdDefuncionNavigation");
+                    b.Navigation("IdDifuntoNavigation");
                 });
 
             modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Sala", b =>
@@ -624,11 +799,13 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                     b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Categoria", "IdCategoriaNavigation")
                         .WithMany("Salas")
                         .HasForeignKey("IdCategoria")
+                        .IsRequired()
                         .HasConstraintName("FK__Salas__ID_Catego__29572725");
 
                     b.HasOne("Sistema_Gestion_Funeraria__LP2_.Models.Localidad", "IdLocalidadNavigation")
                         .WithMany("Salas")
                         .HasForeignKey("IdLocalidad")
+                        .IsRequired()
                         .HasConstraintName("FK__Salas__ID_Locali__286302EC");
 
                     b.Navigation("IdCategoriaNavigation");
@@ -655,13 +832,6 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
                     b.Navigation("IdServicioNavigation");
                 });
 
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Atributo", b =>
-                {
-                    b.Navigation("AtributoCategoria");
-
-                    b.Navigation("FacturacionesAtributos");
-                });
-
             modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Cargo", b =>
                 {
                     b.Navigation("Empleados");
@@ -669,44 +839,43 @@ namespace Sistema_Gestion_Funeraria__LP2_.Migrations
 
             modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Categoria", b =>
                 {
-                    b.Navigation("AtributoCategoria");
-
                     b.Navigation("Salas");
 
                     b.Navigation("ServiciosCategoria");
                 });
 
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Defuncione", b =>
+            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Difunto", b =>
                 {
-                    b.Navigation("FacturacionesAtributos");
-
-                    b.Navigation("FacturacionesServicios");
-
                     b.Navigation("LibroFirmas");
+                });
+
+            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.JornadaLaborale", b =>
+                {
+                    b.Navigation("Empleados");
                 });
 
             modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Localidad", b =>
                 {
-                    b.Navigation("JornadaLaborals");
+                    b.Navigation("Empleados");
 
                     b.Navigation("Salas");
                 });
 
             modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Sala", b =>
                 {
-                    b.Navigation("Defunciones");
+                    b.Navigation("Difuntos");
                 });
 
             modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.Servicio", b =>
                 {
-                    b.Navigation("FacturacionesServicios");
+                    b.Navigation("FacturasServicios");
 
                     b.Navigation("ServiciosCategoria");
                 });
 
-            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.TipoIdentificacion", b =>
+            modelBuilder.Entity("Sistema_Gestion_Funeraria__LP2_.Models.TipoIdentificacione", b =>
                 {
-                    b.Navigation("Defunciones");
+                    b.Navigation("Difunto");
 
                     b.Navigation("Empleados");
                 });

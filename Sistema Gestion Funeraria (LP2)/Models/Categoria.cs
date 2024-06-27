@@ -9,13 +9,13 @@ public partial class Categoria
 
     public string Nombre { get; set; } = null!;
 
-    public string Descripcion { get; set; } = null!;
+    public string? Descripcion { get; set; }
 
     public decimal TotalCobertura { get; set; }
-
-    public virtual ICollection<AtributoCategoria> AtributoCategoria { get; set; } = new List<AtributoCategoria>();
 
     public virtual ICollection<Sala> Salas { get; set; } = new List<Sala>();
 
     public virtual ICollection<ServiciosCategoria> ServiciosCategoria { get; set; } = new List<ServiciosCategoria>();
+
+    public virtual ICollection<Atributo> IdAtributos { get; set; } = new List<Atributo>();
 }

@@ -13,7 +13,7 @@ public partial class Servicio
 
     public decimal Costo { get; set; }
 
-    public virtual ICollection<FacturacionesServicio> FacturacionesServicios { get; set; } = new List<FacturacionesServicio>();
+    public virtual ICollection<FacturasServicio> FacturasServicios { get; set; } = new List<FacturasServicio>();
 
     public virtual ICollection<ServiciosCategoria> ServiciosCategoria { get; set; } = new List<ServiciosCategoria>();
 }

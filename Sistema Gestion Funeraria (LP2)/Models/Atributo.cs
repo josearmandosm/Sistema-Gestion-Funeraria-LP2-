@@ -11,11 +11,5 @@ public partial class Atributo
 
     public string Descripcion { get; set; } = null!;
 
-    public bool Estatus { get; set; }
-
-    public decimal Costo { get; set; }
-
-    public virtual ICollection<AtributoCategoria> AtributoCategoria { get; set; } = new List<AtributoCategoria>();
-
-    public virtual ICollection<FacturacionesAtributo> FacturacionesAtributos { get; set; } = new List<FacturacionesAtributo>();
+    public virtual ICollection<Categoria> IdCategoria { get; set; } = new List<Categoria>();
 }
