@@ -23,11 +23,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthentication(cfg => {
-    cfg.DefaultAuthenticateScheme = 
-    cfg.DefaultChallengeScheme = 
+builder.Services.AddAuthentication(cfg =>
+{
+    cfg.DefaultAuthenticateScheme =
+    cfg.DefaultChallengeScheme =
     cfg.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(x => {
+}).AddJwtBearer(x =>
+{
     x.RequireHttpsMetadata = false;
     x.SaveToken = false;
     x.TokenValidationParameters = new TokenValidationParameters
@@ -55,6 +57,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ManejadorExcepcionMiddleware>();
+
+app.UseAuthentication();
 
 app.UseHttpsRedirection();
 

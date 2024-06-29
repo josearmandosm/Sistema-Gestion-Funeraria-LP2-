@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sistema_Gestion_Funeraria__LP2_.Models;
 
@@ -11,9 +12,11 @@ using Sistema_Gestion_Funeraria__LP2_.Models;
 namespace Sistema_Gestion_Funeraria__LP2_.Migrations
 {
     [DbContext(typeof(FunerariaContext))]
-    partial class FunerariaContextModelSnapshot : ModelSnapshot
+    [Migration("20240629143015_SeedRole")]
+    partial class SeedRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,6 +49,20 @@ public partial class FunerariaContext : IdentityDbContext<ApplicationUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        List<IdentityRole> roles = new List<IdentityRole>{
+            new IdentityRole{
+                Name = "Administrador",
+                NormalizedName = "ADMINISTRADOR"
+            },
+            new IdentityRole{
+                Name = "Usuario",
+                NormalizedName = "USUARIO"
+            }
+        };
+
+        modelBuilder.Entity<IdentityRole>().HasData(roles);
+
         modelBuilder.Entity<Atributo>(entity =>
         {
             entity.HasKey(e => e.IdAtributo).HasName("PK__Atributo__5ECA4A186BBE52E3");
